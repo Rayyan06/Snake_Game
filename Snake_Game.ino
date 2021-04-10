@@ -28,7 +28,13 @@ unsigned long lastMillis;
  * l - left
  * u - up
  */
-char dir{ 'r' };
+enum class Direction
+{
+  dir_right,
+  dir_left,
+  dir_up, 
+  dir_down
+};
 
 const int lcSize {8};
 
@@ -46,7 +52,23 @@ byte screen[lcSize]
 
 
 
-int snake[50][2] = {{3, 3}, {3, 4}, {3, 5}};
+struct Point {
+  uint8_t x;
+  uint8_t y;
+};
+
+struct Snake {
+  Point body[50];
+  Direction dir;
+  uint16_t len;
+};
+
+
+Snake snake{ {Point{3, 3}, Point{3, 4}, Point{3, 5}}, Direction::dir_right, 3};
+
+//Snake snake{};
+//snake.color = 3;
+
 
 
 void setup() {
@@ -66,19 +88,22 @@ void setup() {
   lc.clearDisplay(0);
 }
 
-void displayDot(int x, int y)
+void displayDot(Point point)
 {
-  bitSet(screen[y], x);
+  bitSet(screen[point.y], point.x);
 }
+
 
 int snakeLength()
 {
-  return sizeof(snake) / sizeof(snake[0]);
+  return sizeof(snake.body) / sizeof(snake.body[0]);
 }
+
 void renderSnake()
 {
   for (int i = 0; i < snakeLength(); i++) {
-    displayDot(snake[i][0], snake[i][1]);
+    Serial.print(snake.body[i].x);
+    displayDot(snake.body[i]);
   }
 }
 
@@ -93,47 +118,55 @@ void getJoystickInput() {
   int x_val { analogRead(X_pin) };
   int y_val { analogRead(Y_pin) };
   
-  if (x_val < 400) dir = 'l';
-  else if (x_val > 800) dir = 'r';
-  if (y_val < 400) dir = 'd';
-  else if (y_val > 800) dir = 'u';
+  if (x_val < 400) snake.dir = Direction::dir_left;
+  else if (x_val > 800) snake.dir = Direction::dir_right;
+  if (y_val < 400) snake.dir = Direction::dir_down;
+  else if (y_val > 800) snake.dir = Direction::dir_up;
   
 }
 void moveSnake()
 {
-  int head[2] = {snake[0][0], snake[0][1]};
+  Point head {snake.body[0]};
   //Serial.println(head[0]); 
   
-  int newHead[2];
-  if (dir=='r') {
-    newHead[0] = head[0] + 1;
-    newHead[1] = head[1];
-  }
-  else if (dir=='l') {
-    newHead[0] = head[0] - 1;
-    newHead[1] = head[1];
-  }
-  else if (dir=='u') {
-    newHead[0] = head[0];
-    newHead[1] = head[1] - 1;
-  }
-  else if (dir=='d') {
-    newHead[0] = head[0];
-    newHead[1] = head[1] + 1;
-  }
-  snake[0][0] = newHead[0];
-  snake[0][1] = newHead[1];
+  Point newHead;
+ 
+  switch(snake.dir) {
+    case Direction::dir_right:
+      newHead.x = head.x + 1;
+      newHead.y = head.y;
+      break;
 
-  snake[snakeLength()][0] = 0;
-  
-  for (int i = 0; i < snakeLength(); i ++) 
-  {
-    snake[i] = snake[i + 1]
+    case Direction::dir_left:
+      newHead.x = head.x - 1;
+      newHead.y = head.y;
+      break;
+      
+    case Direction::dir_up: 
+      newHead.x = head.x;
+      newHead.y = head.y - 1;
+      break;
+      
+    case Direction::dir_down:
+      newHead.x = head.x;
+      newHead.y = head.y + 1;
+      break;
+   
   }
-  
+  snake.body[0] = newHead;
+
+
   
 }
 
+void shiftSnake() {
+  for (int i = 0; i < snakeLength(); ++i) 
+  {
+    snake.body[i] = snake.body[i + 1];
+    
+  }
+  snake.body[snakeLength() + 1] = {0, 0};
+}
 void loop() { 
   if (millis() - lastMillis >= 300) {
     lastMillis = millis();
