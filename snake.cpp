@@ -7,14 +7,17 @@ Snake::Snake(uint8_t length) : m_length{ length }
 
 void Snake::begin()
 {
+    m_body[0] = Point{ 3, 4 };
+    m_body[1] = Point{ 3, 5 };
+    m_body[2] = Point{ 3, 6 };
 }
 
 void Snake::render() const
 {  
     // So Simple.
-    for (auto& p: m_body)
+    for (int i{ 0 }; i < m_length; ++i)
     {
-        p.display();
+        m_body[i].display();
     }
 }
 
@@ -83,7 +86,8 @@ void Snake::update(const Point& apple)
 
     if (!apple.isTouching(newHead))
         pop(); // Pop the tail if the apple isn't touching the newHead
-
+    else
+        apple.spawn(); // Move the apple
     
 }
 

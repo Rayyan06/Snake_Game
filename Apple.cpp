@@ -16,3 +16,11 @@ void spawn(const Snake& snake)
     m_x = random(Constants::size);
     m_y = random(Constants::size);
 }
+
+
+void display(byte[Constants::size]& screen) const
+{
+    bitSet(screen[m_y], m_x);
+}
+
+

@@ -74,8 +74,10 @@ int main()
     Snake snake{};
     Apple apple{};
     
+    snake.begin();
+    apple.spawn(snake);
     
-    apple.spawn();
+
     
     pinMode(JoystickControl::SW_pin, INPUT);
     pinMode(JoystickControl::X_pin, INPUT);
@@ -97,6 +99,9 @@ int main()
     /* and clear the display */
     lc.clearDisplay(0);
 
+    // use serial.flush, otherwise interrupts will be turned off
+    Serial.flush();
+
 
     
     for ( ;; )  // infinite loop
@@ -104,15 +109,15 @@ int main()
         if (millis() - lastMillis >= Constants::snake_delay) {
             lastMillis = millis();
             snake.update(apple);
-
+            
         }
         snake.render();
+        apple.display();
         displayScreen();
         snake.handleJoystickInput(analogRead(X_pin), analogRead(Y_pin)); 
         delay(joystickDelay);
         lc.clearDisplay(0);
     }
 
-    Serial.flush();
   
 }

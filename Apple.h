@@ -4,6 +4,8 @@
 // #include "Point.h"// When I learn inheritance
 
 
+class Snake;
+
 class Apple
 {
 private:
@@ -13,12 +15,16 @@ public:
 
     Apple() = default; 
     Apple(uint8_t x, uint8_t y)
-    : m_x{ x }, m_y{ y };
+    : m_x{ x }, m_y{ y }
+    {
+
+    }
 
 
     bool isTouching(const Point& other) const;
 
-    void spawn();
+    void spawn(const Snake& snake);
+    void display() const;
     
     
 }
