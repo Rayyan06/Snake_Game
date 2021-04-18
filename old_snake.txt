@@ -1,0 +1,82 @@
+void moveSnake()
+{
+  Point head {snake.body[0]};
+  //Serial.println(head[0]); 
+  
+  Point newHead;
+ 
+  switch(snake.dir) {
+    case Direction::dir_right:
+      newHead.x = head.x + 1;
+      newHead.y = head.y;
+      break;
+
+    case Direction::dir_left:
+      newHead.x = head.x - 1;
+      newHead.y = head.y;
+      break;
+      
+    case Direction::dir_up: 
+      newHead.x = head.x;
+      newHead.y = head.y - 1;
+      break;
+      
+    case Direction::dir_down:
+      newHead.x = head.x;
+      newHead.y = head.y + 1;
+      break;
+   
+  }
+  snake.body[0] = newHead;
+
+
+  
+}
+
+void shiftSnake() {
+  for (int i = 0; i < snakeLength(); ++i) 
+  {
+    snake.body[i] = snake.body[i + 1];
+    
+  }
+  snake.body[snakeLength() + 1] = {0, 0};
+}
+
+void displayDot(Point point)
+{
+  bitSet(screen[point.y], point.x);
+}
+
+
+int snakeLength()
+{
+  return sizeof(snake.body) / sizeof(snake.body[0]);
+}
+
+void renderSnake()
+{
+  for (int i = 0; i < snakeLength(); i++) {
+    Serial.print(snake.body[i].x);
+    displayDot(snake.body[i]);
+  }
+}
+
+
+
+
+struct Point {
+  uint8_t x;
+  uint8_t y;
+};
+
+struct Snake {
+  Point body[50];
+  Direction dir;
+  uint16_t len;
+};
+
+
+Snake snake{ {Point{3, 3}, Point{3, 4}, Point{3, 5}}, Direction::dir_right, 3};
+
+//Snake snake{};
+//snake.color = 3;
