@@ -2,9 +2,12 @@
 #define APPLE_H
 
 // #include "Point.h"// When I learn inheritance
-
+#include "Point.h"
+#include <Arduino.h>
+#include "snakegame.h"
 
 class Snake;
+class Point;
 
 class Apple
 {
@@ -24,7 +27,8 @@ public:
     bool isTouching(const Point& other) const;
 
     void spawn(const Snake& snake);
-    void display() const;
-    
-    
-}
+    void display(uint8_t* screen);
+
+};
+
+#endif

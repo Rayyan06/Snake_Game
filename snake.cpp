@@ -1,5 +1,7 @@
 #include "snake.h"
-
+#include <Arduino.h>
+#include "Apple.h"
+#include "Point.h"
 
 Snake::Snake(uint8_t length) : m_length{ length }
 {};
@@ -59,25 +61,27 @@ Point& Snake::pop()
 
 
 // Returns a new point given m_direction (return by value)
-Point Snake::getNextHead()
+Point Snake::getNextHead() const
 {
-    Point head{ m_body[0] };
+    Point newHead{ m_body[0] };
     switch(m_direction)
     {
-        case right:
-            return { head.m_x + 1, head.m_y };
-        case left:
-            return { head.m_x - 1, head.m_y };
-        case up:
-            return { head.m_x, head.m_y + 1};
-        case down:
-            return { head.m_x, head.m_y - 1};
+        case Snake::Direction::right:
+            newHead.m_x += 1;
+        case Snake::Direction::left:
+            newHead.m_x -= 1;
+        case Snake::Direction::up:
+            newHead.m_y += 1;
+        case Snake::Direction::down:
+            newHead.m_y -= 1;
+        
     }
+    return newHead;
 }
 
-void Snake::update(const Point& apple)
+void Snake::update(Apple& apple)
 {
-    Point& newHead { getNextHead() };
+    Point newHead { getNextHead() };
     
     // Check for collisions 
     // checkCollisions();
@@ -87,14 +91,14 @@ void Snake::update(const Point& apple)
     if (!apple.isTouching(newHead))
         pop(); // Pop the tail if the apple isn't touching the newHead
     else
-        apple.spawn(); // Move the apple
+        apple.spawn(*this); // Move the apple
     
 }
 
 
 void Snake::setDirection(Snake::Direction dir)
 {
-    using direction = Snake::direction;
+    using direction = Snake::Direction;
 
     // Check for invalid directions. ( up and then down, left and then right etc...)
     if (
@@ -115,7 +119,7 @@ void Snake::setDirection(Snake::Direction dir)
         ||
         (
             (dir == direction::down)
-            && (m_prevdir == up)
+            && (m_prevdir == direction::up)
         )
     )
     {
@@ -130,9 +134,9 @@ void Snake::setDirection(Snake::Direction dir)
 
 void Snake::handleJoystickInput(int x, int y)
 {
-    if (x_val < JoystickControl::sensitivity) snake.setDirection(Snake::Direction::left);
-    else if (x_val > (1023 - JoystickControl::sensitivity)) snake.setDirection(Snake::Direction::right);
+    if (x < JoystickControl::sensitivity) setDirection(Snake::Direction::left);
+    else if (x > (1023 - JoystickControl::sensitivity)) setDirection(Snake::Direction::right);
 
-    if (y_val < JoystickControl::sensitivity) snake.setDirection(Snake::Direction::down);
-    else if (y_val > (1023 - JoystickControl::sensitivity)) snake.setDirection(Snake::Direction::up);
+    if (y < JoystickControl::sensitivity) setDirection(Snake::Direction::down);
+    else if (y > (1023 - JoystickControl::sensitivity)) setDirection(Snake::Direction::up);
 }

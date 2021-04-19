@@ -3,6 +3,8 @@
 
 // for declaring Point::getNextHead as friend
 #include "snake.h" 
+#include "Apple.h"
+#include <Arduino.h>
 
 
 class Point
@@ -19,8 +21,11 @@ public:
 
     void display() const;
     
-    
+    // friend Point Snake::getNextHead() const;
+    friend class Snake; // Make this member function friend later
+    friend class Apple;
 
-}
+
+};
 
 #endif

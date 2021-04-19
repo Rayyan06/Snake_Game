@@ -9,7 +9,7 @@
      
 	Created 17 April 2021
 	By Rayyan Khan
-	Modified 18 April 21
+	Modified 19 April 21
 	By Rayyan Khan
 
 
@@ -41,7 +41,7 @@ LedControl lc = LedControl(
 unsigned long lastMillis;
 
 
-byte screen[Constants::size] 
+uint8_t screen[Constants::size] 
 {
   B00000000,
   B00000000,
@@ -79,15 +79,15 @@ int main()
     
 
     
-    pinMode(JoystickControl::SW_pin, INPUT);
-    pinMode(JoystickControl::X_pin, INPUT);
-    pinMode(JoystickControl::Y_pin, INPUT);
+    pinMode(JoystickControl::SW_PIN, INPUT);
+    pinMode(JoystickControl::X_PIN, INPUT);
+    pinMode(JoystickControl::Y_PIN, INPUT);
 
     // SW_PIN is on by default.
-    digitalWrite(JoystickControl::SW_pin, HIGH);
+    digitalWrite(JoystickControl::SW_PIN, HIGH);
 
     // Start our serial.
-    Serial.begin(9600);
+    // Serial.begin(9600);
 
     /*
     The MAX72XX is in power-saving mode on startup,
@@ -100,7 +100,7 @@ int main()
     lc.clearDisplay(0);
 
     // use serial.flush, otherwise interrupts will be turned off
-    Serial.flush();
+    // Serial.flush();
 
 
     
@@ -114,8 +114,10 @@ int main()
         snake.render();
         apple.display();
         displayScreen();
-        snake.handleJoystickInput(analogRead(X_pin), analogRead(Y_pin)); 
-        delay(joystickDelay);
+        auto joystick_x = analogRead(JoystickControl::X_PIN);
+        auto joystick_y = analogRead(JoystickControl::Y_PIN);
+        snake.handleJoystickInput(joystick_x, joystick_y); 
+        delay(Constants::delay);
         lc.clearDisplay(0);
     }
 

@@ -1,4 +1,5 @@
 #include "Apple.h"
+#include "snakegame.h"
 
 bool Apple::isTouching (const Point& other) const 
 {
@@ -10,7 +11,7 @@ Apple::Apple()
     randomSeed(analogRead(3));
 }
 
-void spawn(const Snake& snake)
+void Apple::spawn(const Snake& snake)
 {
     // Check for snake position later
     m_x = random(Constants::size);
@@ -18,7 +19,7 @@ void spawn(const Snake& snake)
 }
 
 
-void display(byte[Constants::size]& screen) const
+void Apple::display(uint8_t* screen)
 {
     bitSet(screen[m_y], m_x);
 }

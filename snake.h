@@ -1,11 +1,12 @@
 #ifndef SNAKE_H
 #define SNAKE_H
 
-#include "Point.h"
 #include "snakegame.h"
 #include "Apple.h"
+#include <Arduino.h>
+#include "Point.h"
 
-
+class Point;
 class Snake
 {
 public:
@@ -15,16 +16,16 @@ public:
         left, 
         up,
         down
-    }
+    };
 private:
     uint8_t m_length{3}; // Between 0 and 64
 
     // The snake can never be longer than the size of the grid squared.
-    Point m_body[Constants::size*Constants::size];
+    Point m_body[64] = {Point{3, 4}, Point{3, 5}, Point{3, 6}};
 
     // We can use auto because it will infer the types.
-    auto m_direction{ Direction::right };
-    auto m_prevdir{ Direction::right }
+    Snake::Direction m_direction{ Snake::Direction::right };
+    Snake::Direction m_prevdir{ Snake::Direction::right };
 
 public:
     // Constructor
@@ -33,7 +34,7 @@ public:
     void begin();
 
     // getter for length
-    uint8_t length() const { return m_length }; 
+    uint8_t length() const { return m_length; }
 
     void render() const;
 
@@ -44,10 +45,10 @@ public:
     void shift();
 
     // Remove a point from the end of the array (returns Point)
-    Point pop();
+    Point& pop();
 
     // We need apple because we need to know if we are colliding with it.
-    void update(const Point& apple); 
+    void update(Apple& apple); 
 
     // Set direction, to be used by joystick
     void setDirection(Snake::Direction dir);
@@ -62,7 +63,7 @@ public:
 
 
     // Returns the position of the next head based on the m_direction
-    Point getNextHead();
+    Point getNextHead() const;
     
 };
 #endif
