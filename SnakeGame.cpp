@@ -107,8 +107,10 @@ int main()
   for (; ;) 
   {
     snake.display(Screen);
+    snake.update();
     DisplayScreen();
     lc.clearDisplay(0);
     
   }
+  // Execution will never get here(unless we break or something lol)
 }

@@ -30,10 +30,10 @@ public:
 
     // Body setters
     void push(const Point& p);
-    void shift();
     // Remove a point from the end of the array (returns Point)
-    Point& pop();
+    Point pop();
 
+    Point getNextHead() const;
     
     // It is okay to define a getter here in the h file (trivial function)
     length_t getLength() const { return m_length; }
