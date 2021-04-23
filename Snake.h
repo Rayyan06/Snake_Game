@@ -2,10 +2,12 @@
 #define SNAKE_H
 #include "Point.h"
 #include <Arduino.h>
+#include "SnakeGame.h"
 
 class Snake
 {
 public:
+    using length_t = uint8_t;
     enum class Dir
     {
         right,
@@ -16,14 +18,14 @@ public:
 
 private:
     // Snake can never be longer than 64 bits
-    uint8_t m_length{ 3 }; // Initial length
+    length_t m_length{ 3 }; // Initial length
     Point m_body[64];
-    auto m_direction{ Snake::Dir::right };
+    Snake::Dir m_direction{ Snake::Dir::right };
 
 public:
     Snake();
 
-    void display() const;
+    void display(Screen_t (&Screen) [8]) const;
 
 
     // Body setters
@@ -34,10 +36,10 @@ public:
 
     
     // It is okay to define a getter here in the h file (trivial function)
-    uint8_t getLength() const { return m_length };
+    length_t getLength() const { return m_length; }
 
     // Also a simple setter
-    void setDirection(Snake::Dir dir) { m_direction = dir};
+    void setDirection(Snake::Dir dir) { m_direction = dir; }
 
 
     void update();

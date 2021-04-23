@@ -1,6 +1,8 @@
 #ifndef SNAKEGAME_H
 #define SNAKEGAME_H
 
+using Screen_t = uint8_t;
+
 namespace CONSTANTS
 {
   inline constexpr int BRIGHTNESS{ 4 };

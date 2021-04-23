@@ -40,7 +40,7 @@ LedControl lc = LedControl(
 
 
 // An array of bytes to output to the MAX display
-uint8_t Screen[8] = {
+Screen_t Screen[8] = {
   0b00000000,
   0b00000000,
   0b00000000,
@@ -52,7 +52,7 @@ uint8_t Screen[8] = {
 };
 
 // This is a utility function for displaying a single bit on the screen.
-void DisplayDot(uint8_t x, uint8_t y, bool state)
+void DisplayDot(Screen_t x, Screen_t y, bool state)
 {
   // lc.setLed(addr, row, col, state)
   lc.setLed(1, x, y, state);
@@ -62,10 +62,10 @@ void DisplayDot(uint8_t x, uint8_t y, bool state)
 // This function displays the entire screen
 void DisplayScreen()
 {
-  for (uint8_t x=0; x < 8; ++x)
+  for (Screen_t x=0; x < 8; ++x)
   {
-    uint8_t data = &Screen[x];
-    for (uint8_t y=0; y < 8; ++y)
+    Screen_t data = &Screen[x];
+    for (Screen_t y=0; y < 8; ++y)
     {
       // let data = 0b00001000
       // Now 1<<y is 0b00001000
@@ -106,7 +106,7 @@ int main()
   
   for (; ;) 
   {
-    snake.display();
+    snake.display(Screen);
     DisplayScreen();
     lc.clearDisplay(0);
     
