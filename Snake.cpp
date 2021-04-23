@@ -18,3 +18,16 @@ void Snake::display( Screen_t (&Screen) [8]) const
     }
 }
 
+
+void Snake::push(const Point& p)
+{
+
+    /*     This function pushes a Point in front of our body array and 
+    increments m_length by 1.
+    */
+    m_body[m_length++] = p;
+
+
+}
+
+
