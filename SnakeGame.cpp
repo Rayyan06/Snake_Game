@@ -1,6 +1,25 @@
+
+/*
+	Snake_Game
+	This is a Snake Game in arduino which you control using a joystick and has an 8x8 Led display. 
+	The circuit:
+	* JOYSTICK - connected to pins 0, 1, and 2 
+	* MAX72XX  - connected to pins 12, 10, 11, and 1.
+     
+    The Code:
+    * Snake class - Snake.h
+    * Point class
+	Created 17 April 2021
+	By Rayyan Khan
+	Modified 21 April 21
+	By Rayyan Khan
+*/
+
+
 #include <Arduino.h>
 #include <LedControl.h>
 #include "SnakeGame.h"
+#include "Snake.h"
 
 
 /*
@@ -15,9 +34,12 @@ LedControl lc = LedControl(
   PINS::LED::DIN,
   PINS::LED::LOAD,
   PINS::LED::CLK,
-  1
+  1 
 );
 
+
+
+// An array of bytes to output to the MAX display
 uint8_t Screen[8] = {
   0b00000000,
   0b00000000,
@@ -29,6 +51,7 @@ uint8_t Screen[8] = {
   0b00000000
 };
 
+// This is a utility function for displaying a single bit on the screen.
 void DisplayDot(uint8_t x, uint8_t y, bool state)
 {
   // lc.setLed(addr, row, col, state)
@@ -36,6 +59,7 @@ void DisplayDot(uint8_t x, uint8_t y, bool state)
 }
 
 
+// This function displays the entire screen
 void DisplayScreen()
 {
   for (uint8_t x=0; x < 8; ++x)
@@ -75,10 +99,14 @@ int main()
   /* and clear the display */
   lc.clearDisplay(0);
 
+  
+  Snake snake{};
+
 
   
   for (; ;) 
   {
+    snake.display();
     DisplayScreen();
     lc.clearDisplay(0);
     
